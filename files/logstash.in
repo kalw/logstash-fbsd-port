@@ -1,10 +1,11 @@
 #!/bin/sh
 
-# $FreeBSD:
+# $FreeBSD$
+#
 # PROVIDE: logstash
 # REQUIRE: LOGIN
 # KEYWORD: shutdown
-
+#
 #
 # Configuration settings for logstash in /etc/rc.conf:
 #
@@ -27,20 +28,10 @@
 
 . /etc/rc.subr
 
-name="logstash"
+name=logstash
 rcvar=logstash_enable
 
-piddir="/var/run/${name}"
-pidfile="${piddir}/${name}.pid"
-
-if [ -d $piddir ]; then
-	mkdir -p $piddir
-fi
-
-logdir="/var/log"
-command="/usr/sbin/daemon"
-
-load_rc_config "${name}"
+load_rc_config ${name}
 
 : ${logstash_enable="NO"}
 : ${logstash_home="%%LOGSTASH_HOME%%"}
@@ -54,6 +45,16 @@ load_rc_config "${name}"
 : ${logstash_log_file="${logdir}/${name}.log"}
 : ${logstash_elastic_datadir="%%LOGSTASH_DATA_DIR%%"}
 
+piddir=/var/run/${name}
+pidfile=${piddir}/${name}.pid
+
+if [ -d $piddir ]; then
+	mkdir -p $piddir
+fi
+
+logdir="/var/log"
+command="/usr/sbin/daemon"
+
 java_cmd="${logstash_java_home}/bin/java"
 procname="${java_cmd}"
 
@@ -61,16 +62,16 @@ logstash_chdir=${logstash_home}
 logstash_log_options=""
 logstash_elastic_options=""
 
-if [ ${logstash_log} == "YES" ]; then
+if checkyesno logstash_log; then
 	logstash_log_options=" --log ${logstash_log_file}" 
 fi
 
-if [ ${logstash_mode} == "standalone" ]; then
+if [ ${logstash_mode} = "standalone" ]; then
 	logstash_args="agent -f ${logstash_config} -- web --port ${logstash_port} --backend elasticsearch:///?local ${logstash_log_options}"
-	logstash_elastic_options=" -Des.path.data=${logstash_elastic_datadir}"
-elif [ ${logstash_mode} == "agent" ];then
+	logstash_elastic_options="-Des.path.data=${logstash_elastic_datadir}"
+elif [ ${logstash_mode} = "agent" ]; then
 	logstash_args="agent -f ${logstash_config} ${logstash_log_options}"
-elif [ ${logstash_mode} == "web" ];then
+elif [ ${logstash_mode} = "web" ]; then
 	logstash_args="web --port ${logstash_port} --backend elasticsearch://${logstash_elastic_backend}/ ${logstash_log_options}"
 fi
 

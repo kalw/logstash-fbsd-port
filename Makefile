@@ -2,10 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	logstash
-PORTVERSION=	1.1.13
+PORTVERSION=	1.2.1
 CATEGORIES=	sysutils java
 MASTER_SITES=	https://logstash.objects.dreamhost.com/release/ \
-		http://semicomplete.com/files/logstash/
+		https://download.elasticsearch.org/logstash/logstash/
 DISTNAME=	${PORTNAME}-${PORTVERSION}-flatjar
 EXTRACT_SUFX=	.jar
 EXTRACT_ONLY=

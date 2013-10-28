@@ -76,6 +76,7 @@ elif [ ${logstash_mode} = "web" ]; then
 	logstash_args="web --port ${logstash_port} ${logstash_log_options}"
 fi
 
-command_args="-f -p ${pidfile} ${java_cmd} ${logstash_elastic_options} -jar ${logstash_jar} ${logstash_args}"required_files="${java_cmd} ${logstash_config}"
+command_args="-f -p ${pidfile} ${java_cmd} ${logstash_elastic_options} -jar ${logstash_jar} ${logstash_args}"
+required_files="${java_cmd} ${logstash_config}"
 
 run_rc_command "$1"
